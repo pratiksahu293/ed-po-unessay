@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stereotype Challenge Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: radial-gradient(circle at top, #050b1e, #000);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Subtle animated glow */
+body::before {
+  content: "";
+  position: fixed;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(circle, rgba(0,255,255,0.06), transparent 60%);
+  animation: glowMove 20s linear infinite;
+  z-index: -1;
+}
+
+@keyframes glowMove {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(-200px,-150px); }
+  100% { transform: translate(0,0); }
+}
+
+nav {
+  background: black;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 0 15px cyan;
+}
+
+nav a {
+  color: white;
+  font-weight: bold;
+  margin: 0 15px;
+  text-decoration: none;
+}
+
+nav a:hover {
+  text-decoration: underline;
+  color: cyan;
+}
+
+.game-container {
+  max-width: 700px;
+  background: rgba(10, 20, 40, 0.95);
+  margin: 90px auto;
+  padding: 35px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0,255,255,.25);
+  animation: fadeInUp 1.3s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  color: cyan;
+  text-shadow: 0 0 12px rgba(0,255,255,.7);
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin: 12px 0;
+  padding: 14px;
+  border: none;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  font-size: 17px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .25s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px cyan;
+}
+
+#feedback {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.score-box {
+  margin-top: 25px;
+  font-size: 21px;
+  background: rgba(0,255,255,0.15);
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,255,255,.35);
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="concepts.html">Key Concepts</a>
+  <a href="game.html">Mini Game</a>
+</nav>
+
+<div class="game-container">
+  <h2>Stereotype Challenge Quiz</h2>
+  <p id="question"></p>
+
+  <button onclick="checkAnswer(0)" id="btn0"></button>
+  <button onclick="checkAnswer(1)" id="btn1"></button>
+  <button onclick="checkAnswer(2)" id="btn2"></button>
+
+  <p id="feedback"></p>
+
+  <div class="score-box">
+    Score: <span id="score">0</span> / 100
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "A teacher assumes a student of color is struggling. What’s the best response?",
+    options: ["Support and ask about goals", "Assume they need remedial help", "Ignore them"],
+    answer: 0
+  },
+  {
+    q: "Which is an example of digital activism?",
+    options: ["Posting dance videos", "Using hashtags to raise awareness", "Watching YouTube"],
+    answer: 1
+  },
+  {
+    q: "What is a microaggression?",
+    options: ["A compliment", "A small everyday stereotype", "A physical attack"],
+    answer: 1
+  },
+  {
+    q: "What does critical media literacy mean?",
+    options: ["Believing everything online", "Analyzing and questioning media", "Avoiding the internet"],
+    answer: 1
+  },
+  {
+    q: "Which best shows youth agency?",
+    options: ["Being silent online", "Only consuming content", "Creating and organizing online"],
+    answer: 2
+  },
+  {
+    q: "What is the model minority myth?",
+    options: ["All groups face equal challenges", "Some groups are seen as naturally successful", "Everyone is treated fairly"],
+    answer: 1
+  },
+  {
+    q: "What is a third space?",
+    options: ["A digital space for identity expression", "A classroom", "A workplace"],
+    answer: 0
+  },
+  {
+    q: "Which is harmful?",
+    options: ["Youth telling their stories", "Stereotyping entire groups", "Community organizing"],
+    answer: 1
+  },
+  {
+    q: "Why is digital activism powerful?",
+    options: ["It reaches many people quickly", "It is secret", "It replaces schools"],
+    answer: 0
+  },
+  {
+    q: "What does your project argue?",
+    options: ["Social media only harms youth", "Youth are passive online", "Youth reshape media for resistance"],
+    answer: 2
+  }
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+  document.getElementById("question").innerText = questions[current].q;
+  document.getElementById("btn0").innerText = questions[current].options[0];
+  document.getElementById("btn1").innerText = questions[current].options[1];
+  document.getElementById("btn2").innerText = questions[current].options[2];
+  document.getElementById("feedback").innerText = "";
+}
+
+function checkAnswer(choice) {
+  if (choice === questions[current].answer) {
+    score += 10;
+    document.getElementById("feedback").innerText = "✅ Correct! You challenged a stereotype.";
+  } else {
+    document.getElementById("feedback").innerText = "❌ Not quite. That reinforces a stereotype.";
+  }
+
+  document.getElementById("score").innerText = score;
+
+  current++;
+
+  if (current < questions.length) {
+    setTimeout(loadQuestion, 900);
+  } else {
+    document.getElementById("question").innerText = "🎉 Quiz Complete!";
+    document.getElementById("btn0").style.display = "none";
+    document.getElementById("btn1").style.display = "none";
+    document.getElementById("btn2").style.display = "none";
+    document.getElementById("feedback").innerText =
+      "Final Score: " + score + " / 100 — Great job challenging stereotypes!";
+  }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
